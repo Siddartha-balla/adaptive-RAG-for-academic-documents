@@ -1,0 +1,905 @@
+/* ============================================================
+   SCHOLAR AI - App Theme Stylesheet
+   ------------------------------------------------------------
+   This file is the single source of truth for the app's visual
+   styles. Theme COLORS are NOT hard-coded here: they are provided
+   by CSS custom properties (--app-*) injected as a :root block by
+   `app.py` (see `_theme_tokens()`), which allows instant light/dark
+   switching without reloading this stylesheet.
+   ============================================================ */
+
+/* @import must precede all other rules */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* ── App Shell ─────────────────────────────────────────────── */
+.stApp {
+    background: var(--app-bg) !important;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+    color: var(--app-text) !important;
+}
+/* Paint the theme background on the outermost shell and viewport too so the
+   custom light/dark colours always cover the full screen — no transparent
+   gaps that let the native Streamlit shell show through. */
+html, body {
+    background: var(--app-bg) !important;
+}
+[data-testid="stAppViewContainer"] {
+    background: var(--app-bg) !important;
+    min-height: 100vh !important;
+}
+[data-testid="stAppViewContainer"] > section {
+    background: var(--app-bg) !important;
+}
+[data-testid="stMainBlockContainer"] {
+    background: transparent !important;
+    padding-bottom: 8rem !important;
+}
+
+/* ── Hide default chrome ───────────────────────────────────── */
+#MainMenu, footer, header { visibility: hidden !important; height: 0 !important; }
+.stDecoration { display: none !important; }
+[data-testid="collapsedControl"] { color: var(--app-accent) !important; }
+
+/* ── Scrollbar ─────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--app-scrollbar); border-radius: 10px; }
+
+/* ── Sidebar ───────────────────────────────────────────────── */
+[data-testid="stSidebar"] {
+    background: var(--app-sidebar-bg) !important;
+    border-right: 1px solid var(--app-border-2) !important;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+}
+[data-testid="stSidebar"] .block-container { padding: 1.25rem 1rem !important; }
+[data-testid="stSidebarContent"] { background: transparent !important; }
+[data-testid="stSidebarCollapseButton"] { display: none !important; }
+
+/* ── Main content area ─────────────────────────────────────── */
+.main .block-container {
+    max-width: 1120px !important;
+    padding: 0 1.5rem 7rem 1.5rem !important;
+    margin: 0 auto !important;
+}
+[data-testid="stHorizontalBlock"] { gap: 1.25rem !important; }
+.chat-column, .guide-column { min-width: 0; }
+
+/* ── Chat Messages ─────────────────────────────────────────── */
+[data-testid="stChatMessage"] {
+    background: var(--app-surface) !important;
+    border: 1px solid var(--app-border) !important;
+    border-radius: 16px !important;
+    padding: 1rem 1.25rem !important;
+    margin: 0.45rem 0 !important;
+    box-shadow: var(--app-shadow-sm) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    animation: slideInUp 0.32s cubic-bezier(0.22,1,0.36,1) forwards;
+    overflow: visible !important;
+}
+[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) {
+    background: var(--app-user-bubble) !important;
+    border-color: var(--app-user-border) !important;
+    margin-left: 5rem !important;
+}
+
+/* ── Chat Avatar Icons ─────────────────────────────────────── */
+[data-testid="chatAvatarIcon-user"],
+[data-testid="chatAvatarIcon-assistant"] {
+    border-radius: 50% !important;
+    width: 36px !important;
+    height: 36px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.1rem !important;
+    flex-shrink: 0 !important;
+}
+[data-testid="chatAvatarIcon-user"] {
+    background: linear-gradient(135deg, var(--app-accent), var(--app-accent-2)) !important;
+    box-shadow: 0 0 0 3px var(--app-accent-glow) !important;
+}
+[data-testid="chatAvatarIcon-assistant"] {
+    background: linear-gradient(135deg, #1f6feb, var(--app-accent-2)) !important;
+    box-shadow: 0 0 0 3px var(--app-accent-glow) !important;
+}
+
+/* ── Chat message markdown text ────────────────────────────── */
+[data-testid="stChatMessageContent"] p,
+[data-testid="stChatMessageContent"] li,
+[data-testid="stChatMessageContent"] td {
+    color: var(--app-text) !important;
+    line-height: 1.75 !important;
+}
+[data-testid="stChatMessageContent"] h1,
+[data-testid="stChatMessageContent"] h2,
+[data-testid="stChatMessageContent"] h3 {
+    color: var(--app-text) !important;
+    margin-top: 1rem !important;
+    margin-bottom: 0.4rem !important;
+}
+[data-testid="stChatMessageContent"] a { color: var(--app-accent) !important; }
+[data-testid="stChatMessageContent"] strong { font-weight: 700 !important; }
+[data-testid="stChatMessageContent"] em { font-style: italic !important; }
+
+/* ── Code blocks ───────────────────────────────────────────── */
+[data-testid="stChatMessageContent"] pre,
+.stCodeBlock pre {
+    background: var(--app-code-bg) !important;
+    border: 1px solid var(--app-border-2) !important;
+    border-radius: 10px !important;
+    padding: 1rem 1.2rem !important;
+    font-family: "JetBrains Mono", "Fira Code", monospace !important;
+    font-size: 0.83rem !important;
+    overflow-x: auto;
+    line-height: 1.6 !important;
+}
+[data-testid="stChatMessageContent"] code:not(pre code) {
+    background: var(--app-code-bg) !important;
+    color: var(--app-accent) !important;
+    padding: 0.15rem 0.45rem !important;
+    border-radius: 5px !important;
+    font-family: "JetBrains Mono", monospace !important;
+    font-size: 0.85em !important;
+    border: 1px solid var(--app-border-2) !important;
+}
+
+/* ── Tables in chat ────────────────────────────────────────── */
+[data-testid="stChatMessageContent"] table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+    margin: 0.75rem 0 !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    font-size: 0.9rem !important;
+}
+[data-testid="stChatMessageContent"] th {
+    background: var(--app-surface-2) !important;
+    color: var(--app-accent) !important;
+    padding: 0.6rem 0.9rem !important;
+    text-align: left !important;
+    font-weight: 600 !important;
+    border-bottom: 2px solid var(--app-border-2) !important;
+}
+[data-testid="stChatMessageContent"] td {
+    padding: 0.55rem 0.9rem !important;
+    border-bottom: 1px solid var(--app-border) !important;
+}
+[data-testid="stChatMessageContent"] tr:last-child td { border-bottom: none !important; }
+[data-testid="stChatMessageContent"] tr:hover td { background: var(--app-surface-2) !important; }
+
+/* ── Chat Input ────────────────────────────────────────────── */
+[data-testid="stChatInput"] {
+    background: var(--app-input-bg) !important;
+    border: 1px solid var(--app-border-2) !important;
+    border-radius: 16px !important;
+    box-shadow: var(--app-shadow) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+[data-testid="stChatInput"]:focus-within {
+    border-color: var(--app-accent) !important;
+    box-shadow: 0 0 0 3px var(--app-accent-glow), var(--app-shadow) !important;
+}
+[data-testid="stChatInputTextArea"] {
+    color: var(--app-text) !important;
+    background: transparent !important;
+    font-family: Inter, sans-serif !important;
+    font-size: 0.95rem !important;
+}
+[data-testid="stChatInput"] button {
+    background: linear-gradient(135deg, var(--app-accent), var(--app-accent-2)) !important;
+    border-radius: 10px !important;
+    border: none !important;
+    color: white !important;
+    transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+}
+[data-testid="stChatInput"] button:hover {
+    transform: scale(1.06) !important;
+    box-shadow: 0 0 12px var(--app-accent-glow) !important;
+}
+
+/* ── Buttons ───────────────────────────────────────────────── */
+.stButton > button {
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    font-size: 0.875rem !important;
+    transition: all 0.2s cubic-bezier(0.22,1,0.36,1) !important;
+    border-color: var(--app-border-2) !important;
+    color: var(--app-text) !important;
+    background: var(--app-surface) !important;
+}
+.stButton > button:hover {
+    border-color: var(--app-accent) !important;
+    color: var(--app-accent) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: var(--app-shadow-sm) !important;
+}
+[data-testid="stBaseButton-primary"] {
+    background: linear-gradient(135deg, #1f6feb, var(--app-accent)) !important;
+    border: none !important;
+    color: #ffffff !important;
+}
+[data-testid="stBaseButton-primary"]:hover {
+    background: linear-gradient(135deg, var(--app-accent), #1f6feb) !important;
+    box-shadow: 0 4px 20px var(--app-accent-glow) !important;
+}
+
+/* ── Tabs ──────────────────────────────────────────────────── */
+[data-testid="stTabs"] {
+    background: var(--app-surface) !important;
+    border: 1px solid var(--app-border) !important;
+    border-radius: 16px !important;
+    padding: 0.25rem 0 0 0 !important;
+    backdrop-filter: blur(16px);
+    box-shadow: var(--app-shadow-sm);
+    animation: fadeIn 0.4s ease;
+}
+[data-testid="stTabsBar"] {
+    background: var(--app-surface-2) !important;
+    border-radius: 14px 14px 0 0 !important;
+    border-bottom: 1px solid var(--app-border-2) !important;
+    padding: 0 0.75rem !important;
+    gap: 0.25rem !important;
+}
+button[data-testid="stTab"] {
+    color: var(--app-muted) !important;
+    font-weight: 600 !important;
+    font-size: 0.88rem !important;
+    border-radius: 8px 8px 0 0 !important;
+    padding: 0.6rem 1rem !important;
+    transition: color 0.2s ease !important;
+    border-bottom: 2px solid transparent !important;
+}
+button[data-testid="stTab"][aria-selected="true"] {
+    color: var(--app-tab-active) !important;
+    border-bottom: 2px solid var(--app-tab-active) !important;
+    background: transparent !important;
+}
+[data-testid="stTabContent"] { padding: 1rem 1.25rem 1.25rem 1.25rem !important; }
+
+/* ── Metrics ───────────────────────────────────────────────── */
+[data-testid="stMetric"] {
+    background: var(--app-metric-bg) !important;
+    border: 1px solid var(--app-border) !important;
+    border-radius: 12px !important;
+    padding: 0.85rem 1rem !important;
+    backdrop-filter: blur(10px);
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+[data-testid="stMetric"]:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: var(--app-shadow-sm) !important;
+}
+[data-testid="stMetricLabel"] {
+    color: var(--app-muted) !important;
+    font-size: 0.78rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+}
+[data-testid="stMetricValue"] {
+    color: var(--app-text) !important;
+    font-size: 1.4rem !important;
+    font-weight: 700 !important;
+}
+
+/* ── Progress bars ─────────────────────────────────────────── */
+[data-testid="stProgress"] > div > div {
+    background: linear-gradient(90deg, var(--app-accent), var(--app-accent-2)) !important;
+    border-radius: 99px !important;
+}
+[data-testid="stProgress"] > div {
+    background: var(--app-border) !important;
+    border-radius: 99px !important;
+}
+
+/* ── Expanders ─────────────────────────────────────────────── */
+[data-testid="stExpander"] {
+    background: var(--app-surface) !important;
+    border: 1px solid var(--app-border) !important;
+    border-radius: 12px !important;
+    margin-bottom: 0.5rem !important;
+}
+[data-testid="stExpanderToggleIcon"] { color: var(--app-accent) !important; }
+
+/* ── Selectbox / dropdown ──────────────────────────────────── */
+[data-testid="stSelectbox"] > div > div {
+    background: var(--app-surface) !important;
+    border: 1px solid var(--app-border-2) !important;
+    border-radius: 10px !important;
+    color: var(--app-text) !important;
+}
+
+/* ── File uploader ─────────────────────────────────────────── */
+[data-testid="stFileUploader"] {
+    background: var(--app-surface) !important;
+    border: 2px dashed var(--app-border-2) !important;
+    border-radius: 12px !important;
+    transition: border-color 0.2s ease !important;
+}
+[data-testid="stFileUploader"]:hover { border-color: var(--app-accent) !important; }
+
+/* ── Toggle ────────────────────────────────────────────────── */
+[data-testid="stToggle"] span[aria-checked="true"] {
+    background: linear-gradient(135deg, var(--app-accent), var(--app-accent-2)) !important;
+}
+
+/* ── Audio recorder ────────────────────────────────────────── */
+[data-testid="stAudioInput"] {
+    background: var(--app-surface) !important;
+    border: 1px solid var(--app-border-2) !important;
+    border-radius: 16px !important;
+    padding: 0.75rem !important;
+}
+
+/* ── Spinner ───────────────────────────────────────────────── */
+[data-testid="stSpinner"] { color: var(--app-accent) !important; }
+
+/* ── Info / warning / error ────────────────────────────────── */
+[data-testid="stAlert"] {
+    border-radius: 12px !important;
+    border-left-width: 4px !important;
+    backdrop-filter: blur(10px);
+}
+
+/* ── Divider ───────────────────────────────────────────────── */
+hr { border-color: var(--app-border-2) !important; margin: 0.75rem 0 !important; }
+
+/* ── Captions ──────────────────────────────────────────────── */
+[data-testid="stCaptionContainer"] p,
+.stCaption { color: var(--app-muted) !important; font-size: 0.8rem !important; }
+
+/* ── ═══ Custom component classes ═══ ───────────────────────── */
+
+/* Hero banner */
+.scholar-hero {
+    padding: 2.5rem 0 1.75rem 0;
+    text-align: center;
+    animation: fadeIn 0.6s ease;
+}
+.scholar-kicker {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--app-accent), var(--app-accent-2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+}
+.scholar-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    color: var(--app-hero-text);
+    line-height: 1.1;
+    margin: 0 0 0.6rem 0;
+    letter-spacing: -0.02em;
+}
+.scholar-title span {
+    background: linear-gradient(135deg, var(--app-accent), var(--app-accent-2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.scholar-sub {
+    color: var(--app-muted);
+    font-size: 1.05rem;
+    max-width: 600px;
+    margin: 0 auto 1.5rem auto;
+    line-height: 1.65;
+}
+
+/* Example chips */
+.chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin: 0.75rem 0 1.5rem 0;
+}
+.chip {
+    background: var(--app-chip-bg);
+    border: 1px solid var(--app-chip-border);
+    color: var(--app-chip-text);
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    white-space: nowrap;
+}
+.chip:hover {
+    background: var(--app-accent);
+    color: white;
+    border-color: var(--app-accent);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px var(--app-accent-glow);
+}
+
+/* Glass card */
+.glass-card {
+    background: var(--app-surface);
+    border: 1px solid var(--app-border);
+    border-radius: 16px;
+    padding: 1.25rem 1.4rem;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: var(--app-shadow-sm);
+    animation: fadeIn 0.4s ease;
+    margin-bottom: 0.75rem;
+}
+
+/* Status pill */
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+.pill-ready   { background: rgba(63,185,80,0.15); color: var(--app-success); border: 1px solid rgba(63,185,80,0.3); }
+.pill-waiting { background: var(--app-chip-bg); color: var(--app-chip-text); border: 1px solid var(--app-chip-border); }
+.pill-error   { background: rgba(248,81,73,0.12); color: var(--app-danger); border: 1px solid rgba(248,81,73,0.3); }
+
+/* Confidence badge */
+.confidence-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+.conf-high   { background: rgba(63,185,80,0.15); color: var(--app-success); border: 1px solid rgba(63,185,80,0.3); }
+.conf-medium { background: rgba(210,153,34,0.15); color: var(--app-warning); border: 1px solid rgba(210,153,34,0.3); }
+.conf-low    { background: rgba(248,81,73,0.15); color: var(--app-danger); border: 1px solid rgba(248,81,73,0.3); }
+.conf-explanation {
+    font-size: 0.82rem;
+    color: var(--app-muted);
+    line-height: 1.6;
+}
+
+/* Sidebar logo */
+.sidebar-logo {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, #1f6feb, var(--app-accent-2));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    box-shadow: 0 4px 16px var(--app-accent-glow);
+    margin-bottom: 0.5rem;
+}
+.sidebar-brand {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--app-text);
+    letter-spacing: -0.01em;
+    margin-bottom: 0.2rem;
+}
+.sidebar-sub {
+    font-size: 0.75rem;
+    color: var(--app-muted);
+    margin-bottom: 1rem;
+}
+.sidebar-section {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--app-muted);
+    margin: 1.1rem 0 0.5rem 0;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--app-border);
+}
+
+/* Mini metric */
+.mini-metric {
+    background: var(--app-metric-bg);
+    border: 1px solid var(--app-border);
+    border-radius: 10px;
+    padding: 0.55rem 0.75rem;
+    font-size: 0.78rem;
+    text-align: center;
+}
+.mini-metric-val {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--app-accent);
+    display: block;
+}
+.mini-metric-lbl {
+    color: var(--app-muted);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+/* Context chunk card */
+.chunk-card {
+    background: var(--app-surface-2);
+    border: 1px solid var(--app-border);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.5rem;
+    transition: border-color 0.2s ease;
+}
+.chunk-card:hover { border-color: var(--app-accent); }
+.chunk-meta {
+    font-size: 0.73rem;
+    color: var(--app-muted);
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.chunk-tag {
+    background: var(--app-chip-bg);
+    color: var(--app-chip-text);
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+.chunk-text {
+    color: var(--app-text);
+    font-size: 0.88rem;
+    line-height: 1.65;
+    white-space: pre-wrap;
+}
+
+/* Voice panel */
+.voice-panel {
+    background: var(--app-surface);
+    border: 1px solid var(--app-border-2);
+    border-radius: 18px;
+    padding: 1.25rem 1.4rem;
+    margin: 0.75rem 0;
+    backdrop-filter: blur(16px);
+    animation: fadeIn 0.35s ease;
+}
+.voice-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+}
+.voice-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--app-accent), var(--app-accent-2));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    animation: pulse-ring 2s infinite;
+}
+.voice-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--app-text);
+}
+.waveform {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    height: 44px;
+    margin: 0.5rem 0;
+}
+.waveform-bar {
+    width: 4px;
+    background: linear-gradient(180deg, var(--app-accent), var(--app-accent-2));
+    border-radius: 3px;
+    animation: wave 1.3s ease-in-out infinite;
+}
+.waveform-bar:nth-child(1)  { height: 12px; animation-delay: 0.00s; }
+.waveform-bar:nth-child(2)  { height: 20px; animation-delay: 0.09s; }
+.waveform-bar:nth-child(3)  { height: 32px; animation-delay: 0.18s; }
+.waveform-bar:nth-child(4)  { height: 40px; animation-delay: 0.27s; }
+.waveform-bar:nth-child(5)  { height: 44px; animation-delay: 0.36s; }
+.waveform-bar:nth-child(6)  { height: 40px; animation-delay: 0.45s; }
+.waveform-bar:nth-child(7)  { height: 32px; animation-delay: 0.54s; }
+.waveform-bar:nth-child(8)  { height: 20px; animation-delay: 0.63s; }
+.waveform-bar:nth-child(9)  { height: 12px; animation-delay: 0.72s; }
+
+/* Typing indicator */
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0.4rem 0;
+}
+.typing-dot {
+    width: 8px; height: 8px;
+    background: var(--app-accent);
+    border-radius: 50%;
+    animation: typing 1.4s ease-in-out infinite;
+}
+.typing-dot:nth-child(1) { animation-delay: 0.00s; }
+.typing-dot:nth-child(2) { animation-delay: 0.20s; }
+.typing-dot:nth-child(3) { animation-delay: 0.40s; }
+
+/* Context bar (visual reduction) */
+.context-bar-wrap { margin: 0.4rem 0; }
+.context-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.77rem;
+    color: var(--app-muted);
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+}
+.context-bar-track {
+    height: 8px;
+    background: var(--app-border);
+    border-radius: 99px;
+    overflow: hidden;
+}
+.context-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--app-accent), var(--app-accent-2));
+    transition: width 0.6s cubic-bezier(0.22,1,0.36,1);
+}
+
+/* Stage timeline */
+.stage-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.45rem 0;
+    border-bottom: 1px solid var(--app-border);
+    font-size: 0.85rem;
+}
+.stage-row:last-child { border-bottom: none; }
+.stage-name {
+    color: var(--app-muted);
+    font-weight: 600;
+    min-width: 100px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.stage-bar-wrap {
+    flex: 1;
+    height: 6px;
+    background: var(--app-border);
+    border-radius: 99px;
+    overflow: hidden;
+}
+.stage-bar {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--app-accent), var(--app-accent-2));
+}
+.stage-time {
+    font-size: 0.8rem;
+    color: var(--app-text);
+    font-weight: 600;
+    min-width: 55px;
+    text-align: right;
+    font-family: "JetBrains Mono", monospace;
+}
+
+/* ── Question guide panel (right side) ──────────────────────── */
+.guide-panel {
+    background: var(--app-surface);
+    border: 1px solid var(--app-border-2);
+    border-radius: 16px;
+    padding: 1.1rem 1.2rem;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: var(--app-shadow-sm);
+    margin-bottom: 0.75rem;
+}
+.guide-header {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--app-text);
+    margin-bottom: 0.25rem;
+    letter-spacing: -0.01em;
+}
+.guide-sub {
+    font-size: 0.78rem;
+    color: var(--app-muted);
+    margin-bottom: 0.75rem;
+}
+.guide-group {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--app-accent);
+    margin: 0.9rem 0 0.35rem 0;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid var(--app-border);
+}
+.guide-panel .stButton > button {
+    text-align: left !important;
+    font-size: 0.8rem !important;
+    font-weight: 500 !important;
+    padding: 0.35rem 0.65rem !important;
+    border-radius: 8px !important;
+    margin-bottom: 0.15rem !important;
+    line-height: 1.4 !important;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    white-space: normal !important;
+}
+
+/* ── Animations ─────────────────────────────────────────────── */
+@keyframes slideInUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@keyframes wave {
+    0%, 100% { transform: scaleY(0.4); }
+    50%       { transform: scaleY(1.0); }
+}
+@keyframes typing {
+    0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; }
+    40%            { transform: scale(1.1); opacity: 1.0; }
+}
+@keyframes pulse-ring {
+    0%   { box-shadow: 0 0 0 0 var(--app-accent-glow); }
+    70%  { box-shadow: 0 0 0 8px rgba(88,166,255,0); }
+    100% { box-shadow: 0 0 0 0 rgba(88,166,255,0); }
+}
+@keyframes shimmer {
+    0%   { background-position: -400px 0; }
+    100% { background-position: 400px 0; }
+}
+.shimmer {
+    background: linear-gradient(90deg, var(--app-surface) 25%, var(--app-surface-2) 50%, var(--app-surface) 75%);
+    background-size: 800px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 8px;
+    height: 1.2em;
+    margin-bottom: 0.4rem;
+}
+
+/* ── Voice mode chip & processing stepper ──────────────────── */
+.voice-mode-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0.8rem;
+    border-radius: 999px;
+    background: var(--app-chip-bg);
+    color: var(--app-chip-text);
+    border: 1px solid var(--app-chip-border);
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+.voice-stepper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0.9rem;
+    padding: 0.6rem 0.85rem;
+    margin: 0.5rem 0;
+    border-radius: 12px;
+    background: var(--app-surface-2);
+    border: 1px solid var(--app-border);
+    font-size: 0.8rem;
+}
+.voice-step {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-weight: 600;
+    color: var(--app-muted);
+    transition: color 0.25s ease;
+}
+.voice-step.active {
+    color: var(--app-accent);
+    text-shadow: 0 0 12px var(--app-accent-glow);
+}
+.voice-step.done { color: var(--app-success); }
+.voice-step.idle { opacity: 0.55; }
+.voice-stage-msg {
+    font-size: 0.76rem;
+    color: var(--app-muted);
+    margin: 0.25rem 0 0 0;
+}
+
+/* ── Native Streamlit surface theming ──────────────────────── */
+/* The full viewport/shell always paints the theme background so empty space
+   below the content never exposes the native Streamlit shell colour (which
+   previously created a dark band when the app was in light mode). */
+[data-testid="stAppViewContainer"] { background: var(--app-bg) !important; }
+[data-testid="stAppViewContainer"] > section { background: var(--app-bg) !important; }
+[data-testid="stMainBlockContainer"] { background: transparent !important; }
+html, body { background: var(--app-bg) !important; }
+[data-testid="stMain"] { background: transparent !important; }
+[data-testid="stHeader"] { background: transparent !important; }
+
+/* Force all form/input surfaces to our theme colours */
+.stSelectbox [data-baseweb="select"] > div,
+.stMultiSelect [data-baseweb="select"] > div,
+.stNumberInput [data-baseweb="input"],
+.stDateInput [data-baseweb="input"],
+.stTextInput [data-baseweb="input"],
+.stTextArea textarea {
+    background: var(--app-surface) !important;
+    color: var(--app-text) !important;
+    border-color: var(--app-border-2) !important;
+}
+[data-baseweb="popover"], [data-baseweb="menu"], [data-testid="stSelectbox"] [data-baseweb="popover"] ul {
+    background: var(--app-surface-2) !important;
+    color: var(--app-text) !important;
+    border: 1px solid var(--app-border-2) !important;
+}
+[data-baseweb="menu"] li, [data-baseweb="menu"] li[role="option"] { color: var(--app-text) !important; }
+[data-baseweb="menu"] li:hover { background: var(--app-chip-bg) !important; }
+[data-testid="stCheckbox"] label p,
+[data-testid="stToggle"] label p { color: var(--app-text) !important; }
+[data-testid="stDownloadButton"] button,
+[data-testid="stFileUploaderDropzone"] {
+    background: var(--app-surface) !important;
+    color: var(--app-text) !important;
+    border-color: var(--app-border-2) !important;
+}
+[data-testid="stFileUploaderDropzone"] span { color: var(--app-text) !important; }
+[data-testid="stAudioInput"] > div {
+    background: var(--app-surface) !important;
+    border-color: var(--app-border-2) !important;
+    color: var(--app-text) !important;
+}
+[data-testid="stChatInput"] { background: var(--app-input-bg) !important; }
+[data-testid="stMarkdownContainer"] p,
+[data-testid="stMarkdownContainer"] li { color: var(--app-text) !important; }
+[data-testid="stSidebar"] label p,
+[data-testid="stSidebar"] .stCaption,
+[data-testid="stSidebar"] .stMarkdown p { color: var(--app-muted) !important; }
+
+/* ── Extra native-surface theme sync ──────────────────────── */
+[data-testid="stToolbar"],
+[data-testid="stStatusWidget"] {
+    background: transparent !important;
+    color: var(--app-text) !important;
+}
+[data-testid="stWidgetLabel"],
+label[data-testid="stWidgetLabel"] p { color: var(--app-text) !important; }
+[data-testid="stRadio"] label p { color: var(--app-text) !important; }
+[data-testid="stTimeInput"] [data-baseweb="input"] {
+    background: var(--app-surface) !important;
+    color: var(--app-text) !important;
+    border-color: var(--app-border-2) !important;
+}
+[data-testid="stSidebar"] [data-testid="stWidgetLabel"] p,
+[data-testid="stSidebar"] label p { color: var(--app-muted) !important; }
+[data-testid="stMetric"] [data-testid="stMetricLabel"] { color: var(--app-muted) !important; }
+[data-testid="stExpander"] summary { color: var(--app-text) !important; }
+[data-testid="stExpander"] [data-testid="stExpanderDetails"] { color: var(--app-text) !important; }
+
+/* ── Responsive alignment fixes ────────────────────────────── */
+@media (max-width: 992px) {
+    .main .block-container {
+        max-width: 100% !important;
+        padding: 0 1rem 7rem 1rem !important;
+    }
+    [data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) {
+        margin-left: 0 !important;
+    }
+    .chip {
+        white-space: normal !important;
+        text-align: center;
+    }
+}
+

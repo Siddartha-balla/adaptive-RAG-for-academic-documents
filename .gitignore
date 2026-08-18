@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Environment
+.venv/
+venv/
+
+# VS Code
+.vscode/
+
+# Streamlit
+.streamlit/
+
+# Environment variables
+.env
+
+# Uploaded PDFs
+uploads/
+data/
+
+# Generated vector database
+vector_db/
+vector_store/
+processed_data/
+
+# Runtime logs and local models
+logs/
+*.log
+models/
+
+# HuggingFace cache
+.cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS files
+Thumbs.db
+.DS_Store

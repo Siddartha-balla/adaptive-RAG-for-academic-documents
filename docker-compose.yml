@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  scholar-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: scholar-ai
+    ports:
+      - "8501:8501"
+    volumes:
+      # Persist data and vector database
+      - ./data:/app/data
+      - ./uploads:/app/uploads
+      - ./vector_db:/app/vector_db
+      - ./processed_data:/app/processed_data
+      - ./models:/app/models
+      # Persist logs
+      - ./logs:/app/logs
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+      - EMBEDDING_MODEL=BAAI/bge-small-en-v1.5
+      - OLLAMA_MODEL=llama3.2:3b
+      - DEVICE=cpu
+    depends_on:
+      - ollama
+    restart: unless-stopped
+    networks:
+      - scholar-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Ollama service for local LLM inference
+  # Comment out if using external Ollama instance
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+    networks:
+      - scholar-network
+    # GPU support (uncomment if GPU available)
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+volumes:
+  ollama_data:
+    driver: local
+
+networks:
+  scholar-network:
+    driver: bridge
