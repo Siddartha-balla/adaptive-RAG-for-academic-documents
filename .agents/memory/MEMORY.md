@@ -1,4 +1,0 @@
-- [Streamlit startup blocking](streamlit-startup.md) — pipeline init must stay lazy; calling get_pipeline() at module level blocks port 5000 opening.
-- [UI overhaul architecture](ui-overhaul.md) — ChatGPT-style frontend: st.chat_message + st.chat_input, streaming via ask_stream()+finalize_stream_result(), voice via st.audio_input()+VoiceAssistant.
-- [Streamlit CSS selectors](streamlit-css-selectors.md) — stable v1.59 selectors for chat, sidebar, tabs, metrics, buttons, and input styling.
-- [RAG backend upgrade](rag-backend-upgrade.md) — 15-part production upgrade: new query types, expansion, rich citations, BSCO sentence dedup, multi-signal reranker, confidence Very High level.
